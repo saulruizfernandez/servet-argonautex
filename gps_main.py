@@ -30,4 +30,4 @@ def gps_loop(q_gps_out):
          # "a" latitud, "b" longitud, "c" altitud
         q_gps_out.put("a" + str("{0:.6f}".format(gps.latitude)))
         q_gps_out.put("b" + str("{0:.6f}".format(gps.longitude)))
-        q_gps_out.put("c" + str(gps.altitude_m))
+        q_gps_out.put("c" + str(round(gps.altitude_m, 2)))

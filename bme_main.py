@@ -13,7 +13,7 @@ Function sending bme data. Inserts in the queue the temperature, humidity and pr
 """
 def bme_loop(q_bme_out):
     while True:
-        q_bme_out.put("t" + str(bme680.temperature + TEMPERATURE_OFFSET))
-        q_bme_out.put("h" + str(bme680.relative_humidity))
-        q_bme_out.put("p" + str(bme680.pressure))
+        q_bme_out.put("t" + str(round(bme680.temperature + TEMPERATURE_OFFSET, 2)))
+        q_bme_out.put("h" + str(round(bme680.relative_humidity, 2)))
+        q_bme_out.put("p" + str(round(bme680.pressure, 2)))
         sleep(1)
