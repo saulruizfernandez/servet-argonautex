@@ -5,8 +5,9 @@ from threading import Thread
 from time import sleep
 from bme_main import bme_loop
 from gps_main import gps_loop
+from geiger_main import geiger_loop
 
-def unified_loop(q_bme_in, q_gps_in):
+def unified_loop(q_bme_in, q_gps_in, q_geiger_in):
   while True:
     chain = ''
     # BME
@@ -38,6 +39,21 @@ def unified_loop(q_bme_in, q_gps_in):
       longitud = 0
       altitud = 0
     chain += f'{latitud},{longitud},{altitud}'
+
+    # GEIGER
+    try:
+      data_geiger = q_geiger_in.get(block=False)
+      if (data_geiger[0] == "d"):
+        cpm = data_geiger[1:]
+      elif (data_geiger[0] == "e"):
+        svh = data_geiger[1:]
+      elif (data_geiger[0] == "f"):
+        msvh = data_geiger[1:]
+    except QueueEmpty:
+      cpm = 0
+      svh = 0
+      msvh = 0
+    chain += f'{cpm},{svh},{msvh}'
     
     # Print the chain
     print(chain)
@@ -46,12 +62,15 @@ def unified_loop(q_bme_in, q_gps_in):
 # Shared queues
 q_bme = Queue(maxsize=30)
 q_gps = Queue(maxsize=30)
+q_geiger = Queue(maxsize=30)
 
 # Threads
 thread_bme = Thread(target=bme_loop, args=(q_bme, ))
 thread_gps = Thread(target=gps_loop, args=(q_gps, ))
-thread_unif = Thread(target=unified_loop, args=(q_bme, q_gps, ))
+thread_geiger = Thread(target=geiger_loop, args=(q_geiger, ))
+thread_unif = Thread(target=unified_loop, args=(q_bme, q_gps, q_geiger, ))
 
 thread_bme.start()
 thread_gps.start()
+thread_geiger.start()
 thread_unif.start()
