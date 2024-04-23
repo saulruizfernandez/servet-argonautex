@@ -10,7 +10,7 @@ def geiger_loop(q_geiger_out):
           cpm = str(resultado[0])
           svh = str(resultado[1])
           msvh = str(resultado[2])
-          dust = str(resultado[3])
+          dust = str(resultado[3]).strip() # eliminar newline char
         except:
           cpm = "0"
           svh = "0"
