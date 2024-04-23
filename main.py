@@ -8,7 +8,19 @@ from gps_main import gps_loop
 from geiger_main import geiger_loop
 
 def unified_loop(q_bme_in, q_gps_in, q_geiger_in):
+  temperatura = 0
+  humedad = 0
+  presion = 0
+  latitud = 0
+  longitud = 0
+  altitud = 0
+  cpm = 0
+  svh = 0
+  msvh = 0
+  dust = 0
+
   while True:
+    sleep(2)
     chain = ''
     # BME
     for i in range (3):
@@ -21,9 +33,7 @@ def unified_loop(q_bme_in, q_gps_in, q_geiger_in):
         elif (data_bme[0] == "p"):
           presion = data_bme[1:]
       except QueueEmpty:
-        temperatura = 0
-        humedad = 0
-        presion = 0
+        pass
     chain = f'{temperatura},{humedad},{presion},'
 
     # GPS
@@ -37,10 +47,8 @@ def unified_loop(q_bme_in, q_gps_in, q_geiger_in):
         elif (data_gps[0] == "c"):
           altitud = data_gps[1:]
       except QueueEmpty:
-        latitud = 0
-        longitud = 0
-        altitud = 0
-    chain += f'{latitud},{longitud},{altitud}'
+        pass
+    chain += f'{latitud},{longitud},{altitud},'
 
     # GEIGER
     for i in range (3):
@@ -52,15 +60,15 @@ def unified_loop(q_bme_in, q_gps_in, q_geiger_in):
           svh = data_geiger[1:]
         elif (data_geiger[0] == "f"):
           msvh = data_geiger[1:]
+        elif (data_geiger[0] == "g"):
+          dust = data_geiger[1:]
       except QueueEmpty:
-        cpm = 0
-        svh = 0
-        msvh = 0
-    chain += f'{cpm},{svh},{msvh}'
+        pass
+    chain += f'{cpm},{svh},{msvh},{dust}'
     
     # Print the chain
-    print(chain)
-    sleep(1)
+    if (chain != '') :
+      print(chain)
 
 # Shared queues
 q_bme = Queue(maxsize=30)
