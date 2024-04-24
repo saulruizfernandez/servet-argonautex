@@ -20,7 +20,7 @@ class MyLoRa(LoRa):
   def on_tx_done(self):
     self.set_mode(MODE.STDBY)
     self.clear_irq_flags(TxDone=1)
-    sleep(2) # Sent every 5 seconds
+    sleep(5) # Sent every 5 seconds
     print(str(self.cadena))
     self.write_payload(list(str(self.cadena).encode('ascii')))
     print("paquete enviado")

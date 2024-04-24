@@ -16,4 +16,4 @@ def bme_loop(q_bme_out):
         q_bme_out.put("t" + str(round(bme680.temperature + TEMPERATURE_OFFSET, 2)))
         q_bme_out.put("h" + str(round(bme680.relative_humidity, 2)))
         q_bme_out.put("p" + str(round(bme680.pressure, 2)))
-        sleep(1)
+        sleep(5)

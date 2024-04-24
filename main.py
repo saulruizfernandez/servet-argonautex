@@ -10,12 +10,6 @@ from gps_main import gps_loop
 from geiger_main import geiger_loop
 from lora_send import LoraSend
 
-# from pywatchdog import Watchdog
-
-# wdt = Watchdog()
-# wdt.timeout = 45
-# wdt.open()
-
 # Write header in CSV
 fichero_datos = open('../datos/datos_servet.csv', 'a')
 fichero_datos.write('temperatura,humedad,presion,latitud,longitud,altitud,cpm,nsvh,usvh,ugmmm\n')
@@ -34,7 +28,7 @@ def unified_loop(q_bme_in, q_gps_in, q_geiger_in, q_lora_out):
   dust = 0
 
   while True:
-    sleep(2)
+    sleep(5)
     chain = ''
     # BME
     for i in range (3):
@@ -87,14 +81,11 @@ def unified_loop(q_bme_in, q_gps_in, q_geiger_in, q_lora_out):
     # Send data over LoRa
     q_lora_out.put(chain)
 
-    # Reset WDT
-    # wdt.keep_alive()
-
 # Shared queues
-q_bme = Queue(maxsize=30)
-q_gps = Queue(maxsize=30)
-q_geiger = Queue(maxsize=30)
-q_lora = Queue(maxsize=30)
+q_bme = Queue()
+q_gps = Queue()
+q_geiger = Queue()
+q_lora = Queue()
 
 # Threads
 thread_bme = Thread(target=bme_loop, args=(q_bme, ))
@@ -112,5 +103,4 @@ try:
 except:
   pass
 finally:
-  #wdt.close()
   pass

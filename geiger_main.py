@@ -20,4 +20,4 @@ def geiger_loop(q_geiger_out):
         q_geiger_out.put("e" + svh)
         q_geiger_out.put("f" + msvh)
         q_geiger_out.put("g" + dust)
-        sleep(1)
+        sleep(5)
