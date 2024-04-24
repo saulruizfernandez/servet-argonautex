@@ -14,6 +14,8 @@ from picamera import PiCamera
 from time import sleep
 
 camera = PiCamera()
+sleep(2) # Espera a que la ganancia automatica se ajuste
+camera.set_awb_mode = 'fluorescent'
 
 while True:
     i += 1
