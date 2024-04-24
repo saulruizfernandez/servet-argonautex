@@ -2,10 +2,17 @@
 from multiprocessing import Queue
 from queue import Empty as QueueEmpty
 from threading import Thread
+
 from time import sleep
+
 from bme_main import bme_loop
 from gps_main import gps_loop
 from geiger_main import geiger_loop
+
+# Write header in CSV
+fichero_datos = open('../datos/datos_servet.csv', 'a')
+fichero_datos.write('temperatura,humedad,presion,latitud,longitud,altitud,cpm,nsvh,usvh,ugmmm\n')
+fichero_datos.close()
 
 def unified_loop(q_bme_in, q_gps_in, q_geiger_in):
   temperatura = 0
@@ -65,10 +72,11 @@ def unified_loop(q_bme_in, q_gps_in, q_geiger_in):
       except QueueEmpty:
         pass
     chain += f'{cpm},{svh},{msvh},{dust}'
-    
-    # Print the chain
-    if (chain != '') :
-      print(chain)
+
+    # Save data to CSV
+    fichero_datos = open('../datos/datos_servet.csv', 'a')
+    fichero_datos.write(chain + '\n')
+    fichero_datos.close()
 
 # Shared queues
 q_bme = Queue(maxsize=30)
